@@ -58,6 +58,9 @@ if p.returncode != 0:
 print("updating spamassassin rules")
 p = subprocess.Popen(['/usr/bin/sa-update', '--no-gpg', '-v', '--channelfile', '/root/sa-channels'], stdout=subprocess.PIPE)
 (output, err) = p.communicate()
+p = subprocess.Popen(['/usr/bin/sa-update', '--no-gpg', '-v'], stdout=subprocess.PIPE)
+(output, err) = p.communicate()
+
 
 start_service("spamassassin")
 start_service("lighttpd")

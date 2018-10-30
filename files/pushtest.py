@@ -45,7 +45,7 @@ def scan_spam():
                           '--learnhambox', HAMTRAIN, '--learnspambox', SPAMTRAIN,
                           '--mailreport', '/var/www/html/mailreport.txt',
                           '--delete', '--expunge'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    logger.info(p.communicate())
+    (output, err) = p.communicate()
 
 def login():
     #login to server
