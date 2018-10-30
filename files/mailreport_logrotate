@@ -1,0 +1,6 @@
+/var/www/html/mailreport.txt {
+        rotate 7
+        weekly
+        missingok
+        notifempty
+        }

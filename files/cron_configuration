@@ -1,0 +1,3 @@
+*/15 0-23 * * * /root/scan_spam.sh | /usr/bin/logger -e -t scan_spam
+5 0 * * * /usr/bin/sa-update -v --refreshmirrors | /usr/bin/logger -e -t sa-update
+5 10 * * * /usr/bin/sa-update --nogpg --channel sa.zmi.at && /usr/bin/sa-update --nogpg --channel spamassassin.heinlein-support.de
