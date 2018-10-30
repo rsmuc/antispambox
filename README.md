@@ -58,6 +58,6 @@ I made some modifications to ISBG and the push requests are still pending. In An
 * Move custom rules to own channel or seperate from users_conf(https://wiki.apache.org/spamassassin/PublishingRuleUpdates)
 
 ## License
-GPLv3
+MIT
 
 see license text

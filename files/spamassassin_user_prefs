@@ -135,6 +135,8 @@ score BAYES_99 5
 tflags BAYES_99 autolearn_force
 
 score BAYES_00 -10
+tflags BAYES_00 autolearn_force
+
 
 ######################################
 #test not functional in our scenario #
