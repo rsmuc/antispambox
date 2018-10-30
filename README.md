@@ -55,7 +55,7 @@ I made some modifications to ISBG and the push requests are still pending. In An
 ## TODOs
 
 * Spamassassin rules update (sa-update in startup script and cron)
-* Move custom rules to own channel
+* Move custom rules to own channel(https://wiki.apache.org/spamassassin/PublishingRuleUpdates)
 
 ## License
 GPLv3
