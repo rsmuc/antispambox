@@ -31,10 +31,20 @@ account = list(csv.reader(open('/root/accounts/imap_accounts.txt', 'rb'), delimi
 HOST = account[1][0]
 USERNAME = account[1][1]
 PASSWORD = account[1][2]
+JUNK = account[1][3]
+INPUT = account[1][4]
+HAMTRAIN = account[1][5]
+SPAMTRAIN = account[1][6]
+
 
 def scan_spam():
     logger.info("Scanning for SPAM")
-    p = subprocess.Popen('/root/scan_spam.sh', stdout=subprocess.PIPE)
+    p = subprocess.Popen(['/usr/local/bin/isbg', '--spamc', '--imaphost',
+                          HOST, '--imapuser', USERNAME, '--imappasswd', PASSWORD,
+                          '--spaminbox', JUNK, '--imapinbox', INPUT,
+                          '--learnhambox', HAMTRAIN, '--learnspambox', SPAMTRAIN,
+                          '--mailreport', '/var/www/html/mailreport.txt',
+                          '--delete', '--expunge'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     logger.info(p.communicate())
 
 def login():
@@ -93,6 +103,9 @@ def pushing(server):
             count = 0
             logger.info(str(e.message))
             break
+
+# run scan_spam once
+scan_spam()
 
 # run IMAP IDLE until CTRL-C is pressed.
 while True:
