@@ -43,14 +43,14 @@ RUN apt-get update && \
     \
     \
 # download and install other files from antispambox (we could use ADD maybe in future)
-    cd /root && \
-    wget https://github.com/rsmuc/antispambox/archive/master.zip && \
-    unzip master.zip && \
-    cd antispambox-master/files && \
-    cp * /root && \
-    cd ; \
-    rm -Rf /root/antispambox-master ; \
-    rm /root/master.zip ; \
+    #cd /root && \
+    #wget https://github.com/rsmuc/antispambox/archive/master.zip && \
+    #unzip master.zip && \
+    #cd antispambox-master/files && \
+    #cp * /root && \
+    #cd ; \
+    #rm -Rf /root/antispambox-master ; \
+    #rm /root/master.zip ; \
     \
     \
     \
@@ -66,8 +66,6 @@ RUN apt-get update && \
     cd /root && \
 # fix permissions
     chown -R debian-spamd:mail /var/spamassassin ; \
-    #chmod u+x startup ; \
-    #chmod u+x *.sh ; \
 # configure cron configuration
     crontab /root/cron_configuration && rm /root/cron_configuration ; \
 # copy logrotate configuration
