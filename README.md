@@ -2,9 +2,9 @@
 
 ## Status
 
-**not productive**
+**under development**
 
-currently under development
+container should be working basically
 
 ## About
 
@@ -59,6 +59,8 @@ I made some modifications to ISBG and the push requests are still pending. In An
 * don't use tabs in configuration file. maybe switch to json or xml
 * Move custom rules to own channel or seperate from users_conf(https://wiki.apache.org/spamassassin/PublishingRuleUpdates)
 * don't save the password in text file
+* fix logging of startup.py
+* get rid of python2
 
 ## License
 MIT
