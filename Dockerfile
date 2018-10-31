@@ -42,27 +42,12 @@ RUN apt-get update && \
     rm /root/all_in.zip ; \
     \
     \
-# download and install other files from antispambox (we could use ADD maybe in future)
-    #cd /root && \
-    #wget https://github.com/rsmuc/antispambox/archive/master.zip && \
-    #unzip master.zip && \
-    #cd antispambox-master/files && \
-    #cp * /root && \
-    #cd ; \
-    #rm -Rf /root/antispambox-master ; \
-    #rm /root/master.zip ; \
-    \
-    \
-    \
 ############################
 # configure software
 ############################
 
 # create folders
     mkdir /root/accounts ; \
-	mkdir /root/.spamassassin; \
-	#mkdir -p /var/spamassassin/bayesdb ; \
-	#cp /root/spamassassin_user_prefs /root/.spamassassin/user_prefs ;\
     cd /root && \
 # fix permissions
     chown -R debian-spamd:mail /var/spamassassin ; \
@@ -76,7 +61,6 @@ RUN apt-get update && \
     sed -i 's/^OPTIONS=".*"/OPTIONS="--allow-tell --max-children 5 --helper-home-dir -u debian-spamd -x --virtual-config-dir=\/var\/spamassassin -s mail"/' /etc/default/spamassassin ; \
     echo "bayes_path /var/spamassassin/bayesdb/bayes" >> /etc/spamassassin/local.cf ; \
     cp /root/spamassassin_user_prefs /etc/spamassassin/user_prefs.cf ;\
-    #echo "allow_user_rules 1" >> /etc/spamassassin/local.cf ; \
 # configure OS base
     echo "alias logger='/usr/bin/logger -e'" >> /etc/bash.bashrc ; \
     echo "LANG=en_US.UTF-8" > /etc/default/locale ; \
