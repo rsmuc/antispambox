@@ -38,11 +38,11 @@ def check_imap_configuration():
         HOST = account[1][0]
     except IndexError:
         print ("ERROR: was not able to read imap_accounts.txt.")
-        sys.exit(1)
+        sys.exit()
 
     if HOST == "imap.example.net":
         print("ERROR: no accounts in imap_accounts.txt configured - please configure and restart")
-        sys.exit(1)
+        sys.exit()
 
 
 def fix_permissions():
