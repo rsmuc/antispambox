@@ -29,7 +29,7 @@ logger.addHandler(handler)
 
 # read account information
 try:
-    account = list(csv.reader(open('/root/accounts/imap_accounts.txt', 'rb'), delimiter='\t'))
+    account = list(csv.reader(open('/root/accounts/imap_accounts.txt', 'r'), delimiter='\t'))
     HOST = account[1][0]
     USERNAME = account[1][1]
     PASSWORD = account[1][2]

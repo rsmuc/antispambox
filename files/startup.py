@@ -32,7 +32,7 @@ def start_service(servicename):
 
 def check_imap_configuration():
     """ check if the IMAP account has already been configured"""
-    account = list(csv.reader(open('/root/accounts/imap_accounts.txt', 'rb'), delimiter='\t'))
+    account = list(csv.reader(open('/root/accounts/imap_accounts.txt', 'r'), delimiter='\t'))
 
     try:
         HOST = account[1][0]
@@ -66,15 +66,15 @@ def download_spamassassin_rules():
     p = subprocess.Popen(['/usr/bin/sa-update', '--no-gpg', '-v', '--channelfile', '/root/sa-channels'],
                          stdout=subprocess.PIPE)
     (output, err) = p.communicate()
-    if p.returncode != 0:
-        print("sa-update failed")
+    if p.returncode != 0 and p.returncode != 1:
+        print("ERROR: sa-update failed")
         print(err)
         print(output)
 
     p = subprocess.Popen(['/usr/bin/sa-update', '--no-gpg', '-v'], stdout=subprocess.PIPE)
     (output, err) = p.communicate()
-    if p.returncode != 0:
-        print("sa-update failed")
+    if p.returncode != 0 and p.returncode != 1:
+        print("ERROR: sa-update failed")
         print(err)
         print(output)
 
