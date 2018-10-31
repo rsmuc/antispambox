@@ -4,6 +4,7 @@
 from imapclient import IMAPClient
 import subprocess
 import csv
+import sys
 import logging
 from logging.handlers import TimedRotatingFileHandler
 import datetime
@@ -27,15 +28,18 @@ logger.addHandler(handler)
 
 
 # read account information
-account = list(csv.reader(open('/root/accounts/imap_accounts.txt', 'rb'), delimiter='\t'))
-HOST = account[1][0]
-USERNAME = account[1][1]
-PASSWORD = account[1][2]
-JUNK = account[1][3]
-INPUT = account[1][4]
-HAMTRAIN = account[1][5]
-SPAMTRAIN = account[1][6]
-
+try:
+    account = list(csv.reader(open('/root/accounts/imap_accounts.txt', 'rb'), delimiter='\t'))
+    HOST = account[1][0]
+    USERNAME = account[1][1]
+    PASSWORD = account[1][2]
+    JUNK = account[1][3]
+    INPUT = account[1][4]
+    HAMTRAIN = account[1][5]
+    SPAMTRAIN = account[1][6]
+except IndexError:
+    print ("ERROR: was not able to read imap_accounts.txt.")
+    sys.exit(1)
 
 def scan_spam():
     logger.info("Scanning for SPAM")

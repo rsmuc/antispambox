@@ -2,6 +2,7 @@ import os
 from shutil import copyfile
 import subprocess
 import csv
+import sys
 
 def cleanup_file(filename):
     """If file exists, delete it"""
@@ -28,56 +29,89 @@ def start_service(servicename):
     if p.returncode != 0:
         print("startup of service %s failed" % servicename)
 
-print("startup antispambox")
 
-print("delete lock files if still existing")
-cleanup_file("/var/spamassassin/scan_lock")
-cleanup_file("/root/.cache/isbg/lock")
+def check_imap_configuration():
+    """ check if the IMAP account has already been configured"""
+    account = list(csv.reader(open('/root/accounts/imap_accounts.txt', 'rb'), delimiter='\t'))
 
-print("copy imap_accounts.txt files")
-copy_file_if_not_exists("/root/imap_accounts.txt", "/root/accounts/imap_accounts.txt")
+    try:
+        HOST = account[1][0]
+    except IndexError:
+        print ("ERROR: was not able to read imap_accounts.txt.")
+        sys.exit(1)
 
-print("start the services")
-start_service("rsyslog")
-
-print("fixing permissions")
-p = subprocess.Popen(['chown', '-R', 'debian-spamd:mail', '/var/spamassassin'], stdout=subprocess.PIPE)
-(output, err) = p.communicate()
-if p.returncode != 0:
-    print("chown failed")
-    print(err)
-    print(output)
-p = subprocess.Popen(['chmod', 'a+wr', '/var/spamassassin', '-R'], stdout=subprocess.PIPE)
-(output, err) = p.communicate()
-if p.returncode != 0:
-    print("chmod failed")
-    print(err)
-    print(output)
+    if HOST == "imap.example.net":
+        print("ERROR: no accounts in imap_accounts.txt configured - please configure and restart")
+        sys.exit(1)
 
 
-print("updating spamassassin rules")
-p = subprocess.Popen(['/usr/bin/sa-update', '--no-gpg', '-v', '--channelfile', '/root/sa-channels'], stdout=subprocess.PIPE)
-(output, err) = p.communicate()
-p = subprocess.Popen(['/usr/bin/sa-update', '--no-gpg', '-v'], stdout=subprocess.PIPE)
-(output, err) = p.communicate()
+def fix_permissions():
+    """ fix the permissions of the bayes folders"""
+    p = subprocess.Popen(['chown', '-R', 'debian-spamd:mail', '/var/spamassassin'], stdout=subprocess.PIPE)
+    (output, err) = p.communicate()
+    if p.returncode != 0:
+        print("chown failed")
+        print(err)
+        print(output)
+    p = subprocess.Popen(['chmod', 'a+wr', '/var/spamassassin', '-R'], stdout=subprocess.PIPE)
+    (output, err) = p.communicate()
+    if p.returncode != 0:
+        print("chmod failed")
+        print(err)
+        print(output)
 
 
-start_service("spamassassin")
-start_service("lighttpd")
-start_service("cron")
+def download_spamassassin_rules():
+    """download the spamassassin rules"""
+    p = subprocess.Popen(['/usr/bin/sa-update', '--no-gpg', '-v', '--channelfile', '/root/sa-channels'],
+                         stdout=subprocess.PIPE)
+    (output, err) = p.communicate()
+    if p.returncode != 0:
+        print("sa-update failed")
+        print(err)
+        print(output)
 
-print("check if the imap account configuration is available")
-account = list(csv.reader(open('/root/accounts/imap_accounts.txt', 'rb'), delimiter='\t'))
-HOST = account[1][0]
-if HOST == "imap.example.net":
-    print("ERROR: no accounts in imap_accounts.txt configured - please configure and restart")
+    p = subprocess.Popen(['/usr/bin/sa-update', '--no-gpg', '-v'], stdout=subprocess.PIPE)
+    (output, err) = p.communicate()
+    if p.returncode != 0:
+        print("sa-update failed")
+        print(err)
+        print(output)
 
-else:
-    print ("start von pushtest")
+
+def start_imap_idle():
     p = subprocess.Popen(['python', '/root/pushtest.py'], stdout=subprocess.PIPE)
     (output, err) = p.communicate()
     # this will usually run endless
     if p.returncode != 0:
-        print("ERROR: pushtest failed")
+        print("ERROR: IMAPIDLE / PUSH / pushtest failed")
         print(err)
         print(output)
+
+
+print("\n\n\n ******* STARTUP ANTISPAMBOX ******* \n\n\n")
+
+print("\n\n *** delete lock files if still existing")
+cleanup_file("/var/spamassassin/scan_lock")
+cleanup_file("/root/.cache/isbg/lock")
+
+print("\n\n *** copy imap_accounts.txt files")
+copy_file_if_not_exists("/root/imap_accounts.txt", "/root/accounts/imap_accounts.txt")
+
+print("\n\n *** fixing permissions")
+fix_permissions()
+
+print("\n\n *** updating spamassassin rules")
+download_spamassassin_rules()
+
+print("\n\n *** start the services")
+start_service("rsyslog")
+start_service("spamassassin")
+start_service("lighttpd")
+start_service("cron")
+
+print("\n\n *** check if the imap account configuration is available")
+check_imap_configuration()
+
+print ("\n\n *** start of IMAPIDLE / PUSH")
+start_imap_idle()

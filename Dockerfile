@@ -37,9 +37,9 @@ RUN apt-get update && \
     unzip all_in.zip && \
     cd isbg-all_in && \
     python setup.py install && \
-    cd .. && \
-    rm -Rf isbg-all_in && \
-    rm all_in.zip && \
+    cd .. ; \
+    rm -Rf /root/isbg-all_in ; \
+    rm /root/all_in.zip ; \
     \
     \
 # download and install other files from antispambox (we could use ADD maybe in future)
@@ -48,9 +48,9 @@ RUN apt-get update && \
     unzip master.zip && \
     cd antispambox-master/files && \
     cp * /root && \
-    cd && \
-    rm -Rf /root/antispambox-master && \
-    rm /root/master.zip && \
+    cd ; \
+    rm -Rf /root/antispambox-master ; \
+    rm /root/master.zip ; \
     \
     \
     \

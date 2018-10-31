@@ -12,10 +12,11 @@ Antispambox is based on the idea of [IMAPScan](https://github.com/dc55028/imapsc
 
 ### Why not IMAPScan?
 
-* The repository and code of IMAPScan does not include a license. So we don't know if I'm allowed to use and modify it.
-* I prefer Python instead of Bash scripts
+(Thanks to [dc55028](https://github.com/dc55028) for adding the MIT license to the IMAPScan repository)
 
--> No code of IMAPScan is used in Antispambox.
+* I prefer Python instead of Bash scripts
+* I made several modifications (see Features) and not all of the modifications would be compatible to the ideas of IMAPScan
+
 
 ### Why not ISBG? 
 
@@ -31,9 +32,10 @@ I made some modifications to ISBG and the push requests are still pending. In An
 * Integrated PUSH / IMAP IDLE support
 * integrated geo database and filters for it
 * focused on encrypted emails (header analysis only)
-* custom spamassassin rules for Germany and header analysis (my mails are prefiltered by mailbox.org - this container is only focused to the SPAM the MBO filter does not catch)
-* account information and bayes database persistent
+* **custom spamassassin rules for Germany and header analysis (my mails are prefiltered by mailbox.org - this container is only focused to the SPAM the MBO filter does not catch)**
+* account settings and bayes database is persistent
 * latest isbg + patched version
+* Small footprint
 
 ## Using the container
 
