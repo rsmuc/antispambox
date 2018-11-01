@@ -27,9 +27,8 @@ RUN apt-get update && \
       unattended-upgrades && \
     \
     \
-# install dependencies for isbg
-    pip3 install sphinx_rtd_theme recommonmark typing imapclient && \
-    # TODO: installation of html fails - maybe not required
+# install dependencies for pushtest
+    pip3 install  imapclient && \
     \
     \
 # download and install isbg
