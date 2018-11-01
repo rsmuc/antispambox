@@ -96,16 +96,16 @@ def pushing(server):
             
             for response in responses:
                 count = 0
-                if response[1] == "RECENT" or response[1] == "EXISTS":
+                if response[1].decode('UTF-8') == "RECENT" or response[1].decode('UTF-8') == "EXISTS":
                     scan_spam()
-            
+
                 
         except KeyboardInterrupt:
             break
         except Exception as e:
             logger.info("Push error")
             count = 0
-            logger.info(str(e.message))
+            #logger.info(str(e.message))
             break
 
 # run scan_spam once
@@ -124,8 +124,8 @@ while True:
     except KeyboardInterrupt:
         break
     except Exception as e:
-        logger.info("Exception in Mainloop:")
-        logger.info(str(e.message))
+        logger.info("Exception in Mainloop")
+        #logger.info(str(e.message))
 
 # logoff
 logoff(server)
