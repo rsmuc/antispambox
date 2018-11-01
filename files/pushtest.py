@@ -26,7 +26,7 @@ formatter = logging.Formatter(
 handler.setFormatter(formatter)
 logger.addHandler(handler)
 
-
+#TODO: will raise an exception, if default configuration is installed
 # read account information
 try:
     account = list(csv.reader(open('/root/accounts/imap_accounts.txt', 'r'), delimiter='\t'))

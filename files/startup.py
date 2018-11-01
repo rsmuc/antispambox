@@ -80,7 +80,7 @@ def download_spamassassin_rules():
 
 
 def start_imap_idle():
-    p = subprocess.Popen(['python', '/root/pushtest.py'], stdout=subprocess.PIPE)
+    p = subprocess.Popen(['python3', '/root/pushtest.py'], stdout=subprocess.PIPE)
     (output, err) = p.communicate()
     # this will usually run endless
     if p.returncode != 0:

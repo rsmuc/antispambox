@@ -28,7 +28,8 @@ RUN apt-get update && \
     \
     \
 # install dependencies for isbg
-    pip3 install sphinx_rtd_theme html recommonmark typing imapclient && \
+    pip3 install sphinx_rtd_theme recommonmark typing imapclient && \
+    # TODO: installation of html fails - maybe not required
     \
     \
 # download and install isbg
@@ -86,7 +87,7 @@ RUN apt-get update && \
 	\
     \
 # remove tools we don't need anymore
-    apt-get remove -y wget python-pip python-setuptools unzip make cpanminus  && \
+    apt-get remove -y wget python3-pip python3-setuptools unzip make cpanminus  && \
     apt-get autoremove -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
