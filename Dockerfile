@@ -98,4 +98,4 @@ VOLUME /root/accounts
 
 EXPOSE 80/tcp
 
-CMD python /root/startup.py && tail -n 0 -F /var/log/*.log
+CMD python3 /root/startup.py && tail -n 0 -F /var/log/*.log
