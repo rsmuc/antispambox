@@ -102,17 +102,19 @@ def pushing(server):
                 if response[1].decode('UTF-8') == "RECENT" or response[1].decode('UTF-8') == "EXISTS":
                     scan_spam()
 
-
         except KeyboardInterrupt:
             break
+
         except Exception as e:
             logger.info("Push error")
             count = 0
             # logger.info(str(e.message))
             break
 
+
 # run scan_spam once
 scan_spam()
+
 
 # run IMAP IDLE until CTRL-C is pressed.
 while True:
@@ -128,7 +130,7 @@ while True:
         break
     except Exception as e:
         logger.info("Exception in Mainloop")
-        #logger.info(str(e.message))
+        # logger.info(str(e.message))
 
 # logoff
 logoff(server)

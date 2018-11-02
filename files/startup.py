@@ -114,5 +114,5 @@ start_service("cron")
 print("\n\n *** check if the imap account configuration is available")
 check_imap_configuration()
 
-print ("\n\n *** start of IMAPIDLE / PUSH")
+print("\n\n *** start of IMAPIDLE / PUSH")
 start_imap_idle()
