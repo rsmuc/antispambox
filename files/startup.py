@@ -4,6 +4,7 @@ import subprocess
 import csv
 import sys
 
+
 def cleanup_file(filename):
     """If file exists, delete it"""
     if os.path.isfile(filename):
