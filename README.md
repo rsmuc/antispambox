@@ -6,6 +6,11 @@
 
 container should be working basically
 
+[![CodeFactor](https://www.codefactor.io/repository/github/rsmuc/antispambox/badge)](https://www.codefactor.io/repository/github/rsmuc/antispambox)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/f3c14b25f77247e19bdb8fa59190d4d5)](https://www.codacy.com/app/mail_86/antispambox?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=rsmuc/antispambox&amp;utm_campaign=Badge_Grade)
+[![Maintainability](https://api.codeclimate.com/v1/badges/c9ef8ccecca56e361aba/maintainability)](https://codeclimate.com/github/rsmuc/antispambox/maintainability)
+
+
 ## About
 
 Antispambox is based on the idea of [IMAPScan](https://github.com/dc55028/imapscan). It's an Docker container including [ISBG](https://github.com/isbg/isbg). With ISBG it's possible to scan remotely an IMAP mailbox for SPAM mails and move them to a SPAM folder. So we are not dependent to the SPAM filter of our provider.
