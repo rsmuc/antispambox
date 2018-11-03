@@ -3,7 +3,7 @@
 
 from imapclient import IMAPClient
 import subprocess
-import csv
+import json
 import sys
 import logging
 from logging.handlers import TimedRotatingFileHandler
@@ -29,16 +29,19 @@ logger.addHandler(handler)
 # TODO: will raise an exception, if default configuration is installed
 # read account information
 try:
-    account = list(csv.reader(open('/root/accounts/imap_accounts.txt', 'r'), delimiter='\t'))
-    HOST = account[1][0]
-    USERNAME = account[1][1]
-    PASSWORD = account[1][2]
-    JUNK = account[1][3]
-    INPUT = account[1][4]
-    HAMTRAIN = account[1][5]
-    SPAMTRAIN = account[1][6]
+
+    with open("/root/accounts/imap_accounts.json", 'r') as f:
+        datastore = json.load(f)
+
+    HOST = datastore["account"]["server"]
+    USERNAME = datastore["account"]["user"]
+    PASSWORD = datastore["account"]["password"]
+    JUNK = datastore["account"]["junk_folder"]
+    INPUT = datastore["account"]["inbox_folder"]
+    HAMTRAIN = datastore["account"]["ham_train_folder"]
+    SPAMTRAIN = datastore["account"]["spam_train_folder"]
 except IndexError:
-    print("ERROR: was not able to read imap_accounts.txt.")
+    print("ERROR: was not able to read imap_accounts.json.")
     sys.exit(1)
 
 
