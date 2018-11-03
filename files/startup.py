@@ -1,7 +1,7 @@
 import os
 from shutil import copyfile
 import subprocess
-import csv
+import json
 import sys
 
 
