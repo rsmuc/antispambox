@@ -1,2 +1,0 @@
-#server	user	password	junk folder	input folder  ham folder  spamtrain folder
-imap.example.net	user@example.com	password	Junk	INBOX	HAM	SPAMtrain

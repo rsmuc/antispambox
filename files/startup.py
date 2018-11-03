@@ -1,7 +1,7 @@
 import os
 from shutil import copyfile
 import subprocess
-import csv
+import json
 import sys
 
 
@@ -33,16 +33,17 @@ def start_service(servicename):
 
 def check_imap_configuration():
     """ check if the IMAP account has already been configured"""
-    account = list(csv.reader(open('/root/accounts/imap_accounts.txt', 'r'), delimiter='\t'))
 
     try:
-        HOST = account[1][0]
+        with open("/root/accounts/imap_accounts.json", 'r') as f:
+            datastore = json.load(f)
+        HOST = datastore["account"]["server"]
     except IndexError:
-        print ("ERROR: was not able to read imap_accounts.txt.")
+        print ("ERROR: was not able to read imap_accounts.json.")
         sys.exit()
 
     if HOST == "imap.example.net":
-        print("ERROR: no accounts in imap_accounts.txt configured - please configure and restart")
+        print("ERROR: no accounts in imap_accounts.json configured - please configure and restart")
         sys.exit()
 
 
@@ -96,8 +97,8 @@ print("\n\n *** delete lock files if still existing")
 cleanup_file("/var/spamassassin/scan_lock")
 cleanup_file("/root/.cache/isbg/lock")
 
-print("\n\n *** copy imap_accounts.txt files")
-copy_file_if_not_exists("/root/imap_accounts.txt", "/root/accounts/imap_accounts.txt")
+print("\n\n *** copy imap_accounts.json file")
+copy_file_if_not_exists("/root/imap_accounts.json", "/root/accounts/imap_accounts.json")
 
 print("\n\n *** fixing permissions")
 fix_permissions()
