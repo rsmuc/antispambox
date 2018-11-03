@@ -2,9 +2,14 @@
 
 ## Status
 
-**not productive**
+**under development**
 
-currently under development
+container should be working basically
+
+[![CodeFactor](https://www.codefactor.io/repository/github/rsmuc/antispambox/badge)](https://www.codefactor.io/repository/github/rsmuc/antispambox)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/f3c14b25f77247e19bdb8fa59190d4d5)](https://www.codacy.com/app/mail_86/antispambox?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=rsmuc/antispambox&amp;utm_campaign=Badge_Grade)
+[![Maintainability](https://api.codeclimate.com/v1/badges/c9ef8ccecca56e361aba/maintainability)](https://codeclimate.com/github/rsmuc/antispambox/maintainability)
+
 
 ## About
 
@@ -59,6 +64,8 @@ I made some modifications to ISBG and the push requests are still pending. In An
 * don't use tabs in configuration file. maybe switch to json or xml
 * Move custom rules to own channel or seperate from users_conf(https://wiki.apache.org/spamassassin/PublishingRuleUpdates)
 * don't save the password in text file
+* fix logging of startup.py
+* get rid of python2
 
 ## License
 MIT

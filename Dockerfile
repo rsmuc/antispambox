@@ -13,22 +13,22 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
       cron \
       nano \
-      python \
-      python-pip \
-      python-setuptools \
+      python3 \
+      python3-pip \
+      python3-setuptools \
       rsyslog \
       spamassassin \
       spamc \
       unzip \
       wget \
-      python-sphinx \
+      python3-sphinx \
       lighttpd \
       logrotate \
       unattended-upgrades && \
     \
     \
-# install dependencies for isbg
-    pip install sphinx_rtd_theme html recommonmark typing imapclient && \
+# install dependencies for pushtest
+    pip3 install  imapclient && \
     \
     \
 # download and install isbg
@@ -36,7 +36,7 @@ RUN apt-get update && \
     wget https://github.com/rsmuc/isbg/archive/all_in.zip && \
     unzip all_in.zip && \
     cd isbg-all_in && \
-    python setup.py install && \
+    python3 setup.py install && \
     cd .. ; \
     rm -Rf /root/isbg-all_in ; \
     rm /root/all_in.zip ; \
@@ -86,7 +86,7 @@ RUN apt-get update && \
 	\
     \
 # remove tools we don't need anymore
-    apt-get remove -y wget python-pip python-setuptools unzip make cpanminus  && \
+    apt-get remove -y wget python3-pip python3-setuptools unzip make cpanminus  && \
     apt-get autoremove -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
@@ -98,4 +98,4 @@ VOLUME /root/accounts
 
 EXPOSE 80/tcp
 
-CMD python /root/startup.py && tail -n 0 -F /var/log/*.log
+CMD python3 /root/startup.py && tail -n 0 -F /var/log/*.log

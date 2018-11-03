@@ -4,6 +4,7 @@ import subprocess
 import csv
 import sys
 
+
 def cleanup_file(filename):
     """If file exists, delete it"""
     if os.path.isfile(filename):
@@ -32,7 +33,7 @@ def start_service(servicename):
 
 def check_imap_configuration():
     """ check if the IMAP account has already been configured"""
-    account = list(csv.reader(open('/root/accounts/imap_accounts.txt', 'rb'), delimiter='\t'))
+    account = list(csv.reader(open('/root/accounts/imap_accounts.txt', 'r'), delimiter='\t'))
 
     try:
         HOST = account[1][0]
@@ -66,21 +67,21 @@ def download_spamassassin_rules():
     p = subprocess.Popen(['/usr/bin/sa-update', '--no-gpg', '-v', '--channelfile', '/root/sa-channels'],
                          stdout=subprocess.PIPE)
     (output, err) = p.communicate()
-    if p.returncode != 0:
-        print("sa-update failed")
+    if p.returncode != 0 and p.returncode != 1:
+        print("ERROR: sa-update failed")
         print(err)
         print(output)
 
     p = subprocess.Popen(['/usr/bin/sa-update', '--no-gpg', '-v'], stdout=subprocess.PIPE)
     (output, err) = p.communicate()
-    if p.returncode != 0:
-        print("sa-update failed")
+    if p.returncode != 0 and p.returncode != 1:
+        print("ERROR: sa-update failed")
         print(err)
         print(output)
 
 
 def start_imap_idle():
-    p = subprocess.Popen(['python', '/root/pushtest.py'], stdout=subprocess.PIPE)
+    p = subprocess.Popen(['python3', '/root/pushtest.py'], stdout=subprocess.PIPE)
     (output, err) = p.communicate()
     # this will usually run endless
     if p.returncode != 0:
@@ -113,5 +114,5 @@ start_service("cron")
 print("\n\n *** check if the imap account configuration is available")
 check_imap_configuration()
 
-print ("\n\n *** start of IMAPIDLE / PUSH")
+print("\n\n *** start of IMAPIDLE / PUSH")
 start_imap_idle()

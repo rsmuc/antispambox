@@ -26,10 +26,10 @@ formatter = logging.Formatter(
 handler.setFormatter(formatter)
 logger.addHandler(handler)
 
-
+# TODO: will raise an exception, if default configuration is installed
 # read account information
 try:
-    account = list(csv.reader(open('/root/accounts/imap_accounts.txt', 'rb'), delimiter='\t'))
+    account = list(csv.reader(open('/root/accounts/imap_accounts.txt', 'r'), delimiter='\t'))
     HOST = account[1][0]
     USERNAME = account[1][1]
     PASSWORD = account[1][2]
@@ -38,8 +38,9 @@ try:
     HAMTRAIN = account[1][5]
     SPAMTRAIN = account[1][6]
 except IndexError:
-    print ("ERROR: was not able to read imap_accounts.txt.")
+    print("ERROR: was not able to read imap_accounts.txt.")
     sys.exit(1)
+
 
 def scan_spam():
     logger.info("Scanning for SPAM")
@@ -51,8 +52,9 @@ def scan_spam():
                           '--delete', '--expunge'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     (output, err) = p.communicate()
 
+
 def login():
-    #login to server
+    # login to server
     while True:
         try:
             server = IMAPClient(HOST)
@@ -73,13 +75,14 @@ def logoff(server):
     logger.info(("\nIDLE mode done"))
     server.logout()
 
+
 def pushing(server):
     """run IMAP idle until an exception (like no response) happens"""
     count = 0
     while True:
         try:
             # Wait for up to 30 seconds for an IDLE response
-            responses = server.idle_check(timeout=29)           
+            responses = server.idle_check(timeout=29)
 
             if responses:
                 logger.info(responses)
@@ -93,23 +96,25 @@ def pushing(server):
                 scan_spam()
                 count = 0
                 raise Exception("No response")
-            
+
             for response in responses:
                 count = 0
-                if response[1] == "RECENT" or response[1] == "EXISTS":
+                if response[1].decode('UTF-8') == "RECENT" or response[1].decode('UTF-8') == "EXISTS":
                     scan_spam()
-            
-                
+
         except KeyboardInterrupt:
             break
+
         except Exception as e:
             logger.info("Push error")
             count = 0
-            logger.info(str(e.message))
+            # logger.info(str(e.message))
             break
+
 
 # run scan_spam once
 scan_spam()
+
 
 # run IMAP IDLE until CTRL-C is pressed.
 while True:
@@ -124,10 +129,9 @@ while True:
     except KeyboardInterrupt:
         break
     except Exception as e:
-        logger.info("Exception in Mainloop:")
-        logger.info(str(e.message))
+        logger.info("Exception in Mainloop")
+        # logger.info(str(e.message))
 
 # logoff
 logoff(server)
 logger.info("Pushtest exited")
-
