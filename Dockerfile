@@ -33,13 +33,13 @@ RUN apt-get update && \
     \
 # download and install isbg
 	cd /root && \
-    wget https://github.com/rsmuc/isbg/archive/all_in.zip && \
-    unzip all_in.zip && \
-    cd isbg-all_in && \
+    wget https://github.com/rsmuc/isbg/archive/rspamd.zip && \
+    unzip rspamd.zip && \
+    cd isbg-rspamd && \
     python3 setup.py install && \
     cd .. ; \
-    rm -Rf /root/isbg-all_in ; \
-    rm /root/all_in.zip ; \
+    rm -Rf /root/isbg-rspamd ; \
+    rm /root/rspamd.zip ; \
     \
     \
 ############################
@@ -83,7 +83,20 @@ RUN apt-get update && \
 	mv GeoIP.dat /usr/local/share/GeoIP/ &&\
 	echo "loadplugin Mail::SpamAssassin::Plugin::RelayCountry" >> /etc/spamassassin/init.pre ; \
 	\
-	\
+	# install rspamd
+    CODENAME=`lsb_release -c -s` ;\
+    echo "deb [arch=amd64] http://rspamd.com/apt-stable/ $CODENAME main" > /etc/apt/sources.list.d/rspamd.list ;\
+    echo "deb-src [arch=amd64] http://rspamd.com/apt-stable/ $CODENAME main" >> /etc/apt/sources.list.d/rspamd.list ;\
+    apt-get update ;\
+    apt-get --no-install-recommends install -y --allow-unauthenticated rspamd redis-server ;\
+    # configure rspamd
+    echo "backend = 'redis'" > /etc/rspamd/local.d/classifier-bayes.conf ;\
+    echo "new_schema = true;" >> /etc/rspamd/local.d/classifier-bayes.conf ;\
+    echo "expire = 8640000;" >> /etc/rspamd/local.d/classifier-bayes.conf ;\
+    echo "write_servers = 'localhost';" > /etc/rspamd/local.d/redis.conf ;\
+    echo "read_servers = 'localhost';" >> /etc/rspamd/local.d/redis.conf ;\
+    sed -i 's+/var/lib/redis+/var/spamassassin/bayesdb+' /etc/redis/redis.conf ;\
+
     \
 # remove tools we don't need anymore
     apt-get remove -y wget python3-pip python3-setuptools unzip make cpanminus  && \

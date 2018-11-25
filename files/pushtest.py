@@ -13,11 +13,12 @@ import datetime
 logger = logging.getLogger("Pushtest")
 logger.setLevel(logging.INFO)
 
-# rotate the logfile everay 24 hours
+# rotate the logfile every 24 hours
 handler = TimedRotatingFileHandler('/var/log/pushtest.log',
                                    when="H",
                                    interval=24,
                                    backupCount=5)
+
 
 # format the logfile (add timestamp etc)
 formatter = logging.Formatter(
@@ -25,6 +26,10 @@ formatter = logging.Formatter(
 
 handler.setFormatter(formatter)
 logger.addHandler(handler)
+
+# log to stdout
+logger.addHandler(logging.StreamHandler())
+
 
 # TODO: will raise an exception, if default configuration is installed
 # read account information
@@ -40,20 +45,31 @@ try:
     INPUT = datastore["account"]["inbox_folder"]
     HAMTRAIN = datastore["account"]["ham_train_folder"]
     SPAMTRAIN = datastore["account"]["spam_train_folder"]
+    CACHEPATH = "rspamd"
 except IndexError:
     print("ERROR: was not able to read imap_accounts.json.")
     sys.exit(1)
 
 
 def scan_spam():
-    logger.info("Scanning for SPAM")
-    p = subprocess.Popen(['/usr/local/bin/isbg', '--spamc', '--imaphost',
-                          HOST, '--imapuser', USERNAME, '--imappasswd', PASSWORD,
-                          '--spaminbox', JUNK, '--imapinbox', INPUT,
-                          '--learnhambox', HAMTRAIN, '--learnspambox', SPAMTRAIN,
-                          '--mailreport', '/var/www/html/mailreport.txt',
-                          '--delete', '--expunge'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    (output, err) = p.communicate()
+    logger.info("Scanning for SPAM with rspamd")
+    p = subprocess.Popen(['/usr/local/bin/isbg --rspamc --imaphost ' +
+                          HOST + ' --imapuser ' + USERNAME + ' --imappasswd ' + PASSWORD +
+                          ' --spaminbox ' + JUNK + ' --imapinbox ' + INPUT +
+                          ' --learnhambox ' + HAMTRAIN + ' --learnspambox ' + SPAMTRAIN +
+                          ' --cachepath ' + CACHEPATH +
+                          ' --delete --expunge'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+    # '--mailreport', '/var/www/html/mailreport.txt',
+    logger.info(p.communicate())
+
+    logger.info("Scanning for SPAM with spamassassin")
+    p = subprocess.Popen(['/usr/local/bin/isbg --spamc --imaphost ' +
+                          HOST + ' --imapuser ' + USERNAME + ' --imappasswd ' + PASSWORD +
+                          ' --spaminbox ' + JUNK + ' --imapinbox ' + INPUT +
+                          ' --learnhambox ' + HAMTRAIN + ' --learnspambox ' + SPAMTRAIN +
+                          ' --delete --expunge'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+    logger.info(p.communicate())
+
 
 
 def login():
