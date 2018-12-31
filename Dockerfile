@@ -7,6 +7,7 @@ ENV SHELL=/bin/bash
 WORKDIR /root
 
 ADD files/* /root/
+ADD files/rspamd_config/* /root/rspamd_config/
 
 # install software
 RUN apt-get update && \
@@ -90,13 +91,14 @@ RUN apt-get update && \
     apt-get update ;\
     apt-get --no-install-recommends install -y --allow-unauthenticated rspamd redis-server ;\
     # configure rspamd
-    echo "backend = 'redis'" > /etc/rspamd/local.d/classifier-bayes.conf ;\
-    echo "new_schema = true;" >> /etc/rspamd/local.d/classifier-bayes.conf ;\
-    echo "expire = 8640000;" >> /etc/rspamd/local.d/classifier-bayes.conf ;\
-    echo "write_servers = 'localhost';" > /etc/rspamd/local.d/redis.conf ;\
-    echo "read_servers = 'localhost';" >> /etc/rspamd/local.d/redis.conf ;\
+    #echo "backend = 'redis'" > /etc/rspamd/local.d/classifier-bayes.conf ;\
+    #echo "new_schema = true;" >> /etc/rspamd/local.d/classifier-bayes.conf ;\
+    #echo "expire = 8640000;" >> /etc/rspamd/local.d/classifier-bayes.conf ;\
+    #echo "write_servers = 'localhost';" > /etc/rspamd/local.d/redis.conf ;\
+    #echo "read_servers = 'localhost';" >> /etc/rspamd/local.d/redis.conf ;\
     sed -i 's+/var/lib/redis+/var/spamassassin/bayesdb+' /etc/redis/redis.conf ;\
-
+    cp /root/rspamd_config/* /etc/rspamd/local.d/ ;\
+    rm -r /root/rspamd_config ;\
     \
 # remove tools we don't need anymore
     apt-get remove -y wget python3-pip python3-setuptools unzip make cpanminus  && \
@@ -110,5 +112,6 @@ VOLUME /var/spamassassin/bayesdb
 VOLUME /root/accounts
 
 EXPOSE 80/tcp
+EXPOSE 11334/tcp
 
 CMD python3 /root/startup.py && tail -n 0 -F /var/log/*.log

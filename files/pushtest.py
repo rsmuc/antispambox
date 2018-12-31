@@ -45,6 +45,7 @@ try:
     INPUT = datastore["account"]["inbox_folder"]
     HAMTRAIN = datastore["account"]["ham_train_folder"]
     SPAMTRAIN = datastore["account"]["spam_train_folder"]
+    SPAMTRAIN2 = datastore["account"]["spam_train_folder2"]
     CACHEPATH = "rspamd"
 except IndexError:
     print("ERROR: was not able to read imap_accounts.json.")
@@ -56,7 +57,7 @@ def scan_spam():
     p = subprocess.Popen(['/usr/local/bin/isbg --rspamc --imaphost ' +
                           HOST + ' --imapuser ' + USERNAME + ' --imappasswd ' + PASSWORD +
                           ' --spaminbox ' + JUNK + ' --imapinbox ' + INPUT +
-                          ' --learnhambox ' + HAMTRAIN + ' --learnspambox ' + SPAMTRAIN +
+                          ' --learnhambox ' + HAMTRAIN + ' --learnspambox ' + SPAMTRAIN2 +
                           ' --cachepath ' + CACHEPATH +
                           ' --delete --expunge'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     # '--mailreport', '/var/www/html/mailreport.txt',
