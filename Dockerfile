@@ -32,15 +32,15 @@ RUN apt-get update && \
     pip3 install  imapclient && \
     \
     \
-# download and install isbg
+# download and install irsd (as long as it is not pushed to pypi)
 	cd /root && \
-    wget https://github.com/rsmuc/isbg/archive/rspamd.zip && \
-    unzip rspamd.zip && \
-    cd isbg-rspamd && \
+    wget https://codeberg.org/antispambox/IRSD/archive/master.zip && \
+    unzip master.zip && \
+    cd irsd && \
     python3 setup.py install && \
     cd .. ; \
-    rm -Rf /root/isbg-rspamd ; \
-    rm /root/rspamd.zip ; \
+    rm -Rf /root/irsd ; \
+    rm /root/master.zip ; \
     \
     \
 ############################
@@ -111,7 +111,7 @@ RUN apt-get update && \
 VOLUME /var/spamassassin/bayesdb
 VOLUME /root/accounts
 
-EXPOSE 80/tcp
-EXPOSE 11334/tcp
+# EXPOSE 80/tcp
+# EXPOSE 11334/tcp
 
 CMD python3 /root/startup.py && tail -n 0 -F /var/log/*.log
