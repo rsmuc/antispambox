@@ -54,7 +54,7 @@ except IndexError:
 
 def scan_spam():
     logger.info("Scanning for SPAM with rspamd")
-    p = subprocess.Popen(['/usr/local/bin/isbg --rspamc --imaphost ' +
+    p = subprocess.Popen(['/usr/local/bin/irsd --rspamc --imaphost ' +
                           HOST + ' --imapuser ' + USERNAME + ' --imappasswd ' + PASSWORD +
                           ' --spaminbox ' + JUNK + ' --imapinbox ' + INPUT +
                           ' --learnhambox ' + HAMTRAIN + ' --learnspambox ' + SPAMTRAIN2 +

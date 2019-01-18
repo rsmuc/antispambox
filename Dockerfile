@@ -29,7 +29,8 @@ RUN apt-get update && \
     \
     \
 # install dependencies for pushtest
-    pip3 install  imapclient && \
+    pip3 install imapclient && \
+    pip3 install isbg && \
     \
     \
 # download and install irsd (as long as it is not pushed to pypi)

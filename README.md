@@ -10,10 +10,11 @@ container should be working basically
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/f3c14b25f77247e19bdb8fa59190d4d5)](https://www.codacy.com/app/mail_86/antispambox?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=rsmuc/antispambox&amp;utm_campaign=Badge_Grade)
 [![Maintainability](https://api.codeclimate.com/v1/badges/c9ef8ccecca56e361aba/maintainability)](https://codeclimate.com/github/rsmuc/antispambox/maintainability)
 
-
 ## About
 
-Antispambox is based on the idea of [IMAPScan](https://github.com/dc55028/imapscan). It's an Docker container including [ISBG](https://github.com/isbg/isbg). With ISBG it's possible to scan remotely an IMAP mailbox for SPAM mails and move them to a SPAM folder. So we are not dependent to the SPAM filter of our provider.
+Antispambox is based on the idea of [IMAPScan](https://github.com/dc55028/imapscan). It's an Docker container including [ISBG](https://github.com/isbg/isbg). With ISBG it's possible to scan remotely an IMAP mailbox for SPAM mails with spamassassin. So we are not dependent to the SPAM filter of our provider.
+
+Antispambox does have two anti-spam-engines integrated. Spamassassin and RSpamd.
 
 ### Why not IMAPScan?
 
@@ -21,53 +22,62 @@ Antispambox is based on the idea of [IMAPScan](https://github.com/dc55028/imapsc
 
 * I prefer Python instead of Bash scripts
 * I made several modifications (see Features) and not all of the modifications would be compatible to the ideas of IMAPScan
+* I integrated push support
+* ...
 
+### Why not ISBG only?
 
-### Why not ISBG? 
+ISBG is only supporting spamassassin as backend. Spamassassin is a very effective, but not very efficient SPAM filter. At home I'm running the docker container on a very small embedded PC with an Atom CPU. On my smartphone I'm using K9Mail with push support. So it is very important that the scanning for SPAM is very fast. With spamassassin it takes too long to filter the mails, so SPAM mails are shown on my smartphone before they are filterd out. The solution: rspamd. 
 
-I made some modifications to ISBG and the push requests are still pending. In Antispambox currently my own fork of ISBG is used:
+But rspamd is not supported by ISBG and will not be supported to keep ISBG maintainable. So I forked ISBG and created IRSD. 
 
-* I did not like that in ISBG every mail is processed twice by spamassassin.
-* I wanted to have a report for every scanned email.
+Antispambox integrated both.
 
+### Why not IRSD only?
+
+rspamd scans the mails on my machine very fast and efficient but the detection rate is not as good for me as spamassassin. 
 
 ### Features
 
-* Integrated a report for all HAM mails. Reachable via lighttpd e.g.: http://192.168.1.23:8000/mailreport.txt
+* Integration of ISBG (spamassassin)
+* Integration of IRSD (rspamd)
 * Integrated PUSH / IMAP IDLE support
 * integrated geo database and filters for it
 * focused on encrypted emails (header analysis only)
-* **custom spamassassin rules for Germany and header analysis (my mails are prefiltered by mailbox.org - this container is only focused to the SPAM the MBO filter does not catch)**
-* account settings and bayes database is persistent
-* latest isbg + patched version
-* Small footprint
+* **custom spamassassin rules for Germany and header analysis (my mails are prefiltered by mailbox.org - this container is only focused to the SPAM the MBO filter does not catch) - so the rules may not match your requirements**
+* In future: Webinterface to configure everything
+* In future: Configure the rspamd webinterface
+* In future: Support multiple IMAP accounts within one container
 
 ## Using the container
 
 ### building the container
+
 * ```docker build -f Dockerfile -t antispambox . --no-cache```
 
 ### starting the container
 
 * ```sudo docker volume create bayesdb```
 * ```sudo docker volume create accounts```
-* ```sudo docker run -d --name antispambox -v bayesdb:/var/spamassassin/bayesdb -v accounts:/root/accounts -p 8000:80 antispambox```
+* ```sudo docker run -d --name antispambox -v bayesdb:/var/spamassassin/bayesdb -v accounts:/root/accounts antispambox```
 
 ### configure the container
 
-* if available copy a backup of your bayes_database to the container and use sa-learn --restore
-* configure the account at /root/accounts
-* reboot the container
+* **TODO**
+
+  
 
 ## TODOs
 
-* don't use tabs in configuration file. maybe switch to json or xml
-* Move custom rules to own channel or seperate from users_conf(https://wiki.apache.org/spamassassin/PublishingRuleUpdates)
-* don't save the password in text file
-* fix logging of startup.py
-* get rid of python2
+* see features
+* PEP8 & static code analysis
 
 ## License
+
 MIT
 
 see license text
+
+
+
+
