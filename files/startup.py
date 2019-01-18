@@ -108,6 +108,8 @@ download_spamassassin_rules()
 
 print("\n\n *** start the services")
 start_service("rsyslog")
+start_service("redis-server")
+start_service("rspamd")
 start_service("spamassassin")
 start_service("lighttpd")
 start_service("cron")

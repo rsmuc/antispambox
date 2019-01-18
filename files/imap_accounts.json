@@ -5,6 +5,7 @@
       "junk_folder": "Junk",
       "inbox_folder": "INBOX",
       "ham_train_folder": "HAM",
-      "spam_train_folder": "SPAMTrain"
+      "spam_train_folder": "SPAMTrain",
+      "spam_train_folder2": "SPAMTrain"
     }
 }
