@@ -14,7 +14,7 @@ logger = logging.getLogger("Pushtest")
 logger.setLevel(logging.INFO)
 
 # rotate the logfile every 24 hours
-handler = TimedRotatingFileHandler('/var/log/pushtest.log',
+handler = TimedRotatingFileHandler('/var/log/antispambox.log',
                                    when="H",
                                    interval=24,
                                    backupCount=5)
@@ -30,8 +30,6 @@ logger.addHandler(handler)
 # log to stdout
 logger.addHandler(logging.StreamHandler())
 
-
-# TODO: will raise an exception, if default configuration is installed
 # read account information
 try:
 

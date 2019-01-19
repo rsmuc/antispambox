@@ -83,6 +83,8 @@ rspamd scans the mails on my machine very fast and efficient but the detection r
 
 * To see how many mails spamassassin has already learned run: `sa-learn --dump magic`
 
+* There is a logfile to see the IMAP idle and scanning process: /var/log/antispambox.log
+
 ## TODOs
 
 * see features

@@ -88,11 +88,11 @@ def download_spamassassin_rules():
 
 
 def start_imap_idle():
-    p = subprocess.Popen(['python3', '/root/pushtest.py'], stdout=subprocess.PIPE)
+    p = subprocess.Popen(['python3', '/root/antispambox.py'], stdout=subprocess.PIPE)
     (output, err) = p.communicate()
     # this will usually run endless
     if p.returncode != 0:
-        print("ERROR: IMAPIDLE / PUSH / pushtest failed")
+        print("ERROR: IMAPIDLE / PUSH / antispambox failed")
         print(err)
         print(output)
 
