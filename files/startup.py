@@ -102,6 +102,7 @@ print("\n\n\n ******* STARTUP ANTISPAMBOX ******* \n\n\n")
 print("\n\n *** delete lock files if still existing")
 cleanup_file("/var/spamassassin/scan_lock")
 cleanup_file("/root/.cache/isbg/lock")
+cleanup_file("/root/.cache/irsd/lock")
 
 print("\n\n *** copy imap_accounts.json file")
 copy_file_if_not_exists("/root/imap_accounts.json", "/root/accounts/imap_accounts.json")
