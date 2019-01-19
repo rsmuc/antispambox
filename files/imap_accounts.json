@@ -1,6 +1,6 @@
 {
   "antispambox": {
-    "enabled": "True",
+    "enabled": "False",
     "account": {
       "server": "imap.example.net",
       "user": "username",
