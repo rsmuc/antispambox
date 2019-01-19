@@ -37,12 +37,18 @@ def check_imap_configuration():
     try:
         with open("/root/accounts/imap_accounts.json", 'r') as f:
             datastore = json.load(f)
-        HOST = datastore["account"]["server"]
+        enabled = datastore["antispambox"]["enabled"]
+        host = datastore["antispambox"]["account"]["server"]
+
     except IndexError:
-        print ("ERROR: was not able to read imap_accounts.json.")
+        print("ERROR: was not able to read imap_accounts.json.")
         sys.exit()
 
-    if HOST == "imap.example.net":
+    if enabled != "True":
+        print("ERROR: Antispambox configuration is not set to enabled - end the service")
+        sys.exit()
+
+    if host == "imap.example.net":
         print("ERROR: no accounts in imap_accounts.json configured - please configure and restart")
         sys.exit()
 
@@ -114,7 +120,7 @@ start_service("spamassassin")
 start_service("lighttpd")
 start_service("cron")
 
-print("\n\n *** check if the imap account configuration is available")
+print("\n\n *** check if the imap account configuration is available and active")
 check_imap_configuration()
 
 print("\n\n *** start of IMAPIDLE / PUSH")

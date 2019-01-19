@@ -6,8 +6,8 @@ ENV SHELL=/bin/bash
 
 WORKDIR /root
 
-ADD files/* /root/
-ADD files/rspamd_config/* /root/rspamd_config/
+COPY files/* /root/
+COPY files/rspamd_config/* /root/rspamd_config/
 
 # install software
 RUN apt-get update && \
@@ -26,13 +26,13 @@ RUN apt-get update && \
       lighttpd \
       logrotate \
       unattended-upgrades && \
-    \
-    \
+
+
 # install dependencies for pushtest
     pip3 install imapclient && \
     pip3 install isbg && \
-    \
-    \
+
+
 # download and install irsd (as long as it is not pushed to pypi)
 	cd /root && \
     wget https://codeberg.org/antispambox/IRSD/archive/master.zip && \
@@ -42,8 +42,8 @@ RUN apt-get update && \
     cd .. ; \
     rm -Rf /root/irsd ; \
     rm /root/master.zip ; \
-    \
-    \
+
+
 ############################
 # configure software
 ############################
@@ -51,18 +51,23 @@ RUN apt-get update && \
 # create folders
     mkdir /root/accounts ; \
     cd /root && \
+#
 # fix permissions
     chown -R debian-spamd:mail /var/spamassassin ; \
+#
 # configure cron configuration
     crontab /root/cron_configuration && rm /root/cron_configuration ; \
+#
 # copy logrotate configuration
     mv mailreport_logrotate /etc/logrotate.d/mailreport_logrotate ; \
+#
 # configure spamassassin
     sed -i 's/ENABLED=0/ENABLED=1/' /etc/default/spamassassin ; \
     sed -i 's/CRON=0/CRON=1/' /etc/default/spamassassin ; \
     sed -i 's/^OPTIONS=".*"/OPTIONS="--allow-tell --max-children 5 --helper-home-dir -u debian-spamd -x --virtual-config-dir=\/var\/spamassassin -s mail"/' /etc/default/spamassassin ; \
     echo "bayes_path /var/spamassassin/bayesdb/bayes" >> /etc/spamassassin/local.cf ; \
     cp /root/spamassassin_user_prefs /etc/spamassassin/user_prefs.cf ;\
+#
 # configure OS base
     echo "alias logger='/usr/bin/logger -e'" >> /etc/bash.bashrc ; \
     echo "LANG=en_US.UTF-8" > /etc/default/locale ; \
@@ -70,9 +75,7 @@ RUN apt-get update && \
     ln -s /usr/share/zoneinfo/Europe/Berlin /etc/localtime ; \
     unlink /etc/timezone ; \
     ln -s /usr/share/zoneinfo/Europe/Berlin /etc/timezone ; \
-    \
-    \
-    \
+#
 # integrate geo database
     apt-get install -y --no-install-recommends cpanminus make wget&&\
 	cpanm  YAML &&\
@@ -84,8 +87,8 @@ RUN apt-get update && \
 	mkdir /usr/local/share/GeoIP/ &&\
 	mv GeoIP.dat /usr/local/share/GeoIP/ &&\
 	echo "loadplugin Mail::SpamAssassin::Plugin::RelayCountry" >> /etc/spamassassin/init.pre ; \
-	\
-	# install rspamd
+#
+# install rspamd
     CODENAME=`lsb_release -c -s` ;\
     echo "deb [arch=amd64] http://rspamd.com/apt-stable/ $CODENAME main" > /etc/apt/sources.list.d/rspamd.list ;\
     echo "deb-src [arch=amd64] http://rspamd.com/apt-stable/ $CODENAME main" >> /etc/apt/sources.list.d/rspamd.list ;\
@@ -100,7 +103,7 @@ RUN apt-get update && \
     sed -i 's+/var/lib/redis+/var/spamassassin/bayesdb+' /etc/redis/redis.conf ;\
     cp /root/rspamd_config/* /etc/rspamd/local.d/ ;\
     rm -r /root/rspamd_config ;\
-    \
+#
 # remove tools we don't need anymore
     apt-get remove -y wget python3-pip python3-setuptools unzip make cpanminus  && \
     apt-get autoremove -y && \

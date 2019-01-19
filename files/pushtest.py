@@ -38,14 +38,14 @@ try:
     with open("/root/accounts/imap_accounts.json", 'r') as f:
         datastore = json.load(f)
 
-    HOST = datastore["account"]["server"]
-    USERNAME = datastore["account"]["user"]
-    PASSWORD = datastore["account"]["password"]
-    JUNK = datastore["account"]["junk_folder"]
-    INPUT = datastore["account"]["inbox_folder"]
-    HAMTRAIN = datastore["account"]["ham_train_folder"]
-    SPAMTRAIN = datastore["account"]["spam_train_folder"]
-    SPAMTRAIN2 = datastore["account"]["spam_train_folder2"]
+    HOST = datastore["antispambox"]["account"]["server"]
+    USERNAME = datastore["antispambox"]["account"]["user"]
+    PASSWORD = datastore["antispambox"]["account"]["password"]
+    JUNK = datastore["antispambox"]["account"]["junk_folder"]
+    INPUT = datastore["antispambox"]["account"]["inbox_folder"]
+    HAMTRAIN = datastore["antispambox"]["account"]["ham_train_folder"]
+    SPAMTRAIN = datastore["antispambox"]["account"]["spam_train_folder"]
+    SPAMTRAIN2 = datastore["antispambox"]["account"]["spam_train_folder2"]
     CACHEPATH = "rspamd"
 except IndexError:
     print("ERROR: was not able to read imap_accounts.json.")
@@ -72,7 +72,6 @@ def scan_spam():
     logger.info(p.communicate())
 
 
-
 def login():
     # login to server
     while True:
@@ -92,7 +91,7 @@ def login():
 
 def logoff(server):
     server.idle_done()
-    logger.info(("\nIDLE mode done"))
+    logger.info("\nIDLE mode done")
     server.logout()
 
 

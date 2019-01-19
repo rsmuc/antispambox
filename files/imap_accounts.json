@@ -1,5 +1,8 @@
-{ "account":
-    {"server": "imap.example.net",
+{
+  "antispambox": {
+    "enabled": "True",
+    "account": {
+      "server": "imap.example.net",
       "user": "username",
       "password": "examplepassword",
       "junk_folder": "Junk",
@@ -8,4 +11,5 @@
       "spam_train_folder": "SPAMTrain",
       "spam_train_folder2": "SPAMTrain"
     }
+  }
 }
