@@ -54,6 +54,8 @@ rspamd scans the mails on my machine very fast and efficient but the detection r
 ### starting the container
 
 * ```sudo docker volume create bayesdb```
+
+  ```
 * ```sudo docker volume create accounts```
 
   ```
@@ -64,16 +66,22 @@ rspamd scans the mails on my machine very fast and efficient but the detection r
 * To configure the container run:
   * `docker exec -i -t antispambox /bin/bash`
   * use nano to configure the /root/accounts/imap_accounts.json
-* startup.py will be directly started with the docker container. To enable the scanning for spam, you need to set in /accounts/imap_accounts.json the enabled flag to true. By deafult this flag will be set to false until the configuration is finished. 
-* First configure you maril account in /root/accounts/imap_accounts.json
+* startup.py will be directly started with the docker container. To enable the scanning for spam, you need to set in /accounts/imap_accounts.json the enabled flag to True. By deafult this flag will be set to False until the configuration is finished. 
+* First configure you mail account in /root/accounts/imap_accounts.json
 * Train spamassassinn and spamd:
   * To ensure that spamassassin and spamd bayes filtering is working you should train it at least with 200 SPAM and 200 HAM mails. 
 
-    To train the filter copy your SPAM and HAM messages in the IMAP folders you configured for SPAM_learn and HAM_learn and execute /root/train_only.py
-* Set the enabled flag in /root/accounts/imap_accounts.json to true.
+    To train the backends copy your SPAM and HAM messages in the IMAP folders you configured for SPAM_train and HAM_traing.
+* Set the enabled flag in /root/accounts/imap_accounts.json to True.
 * Restart the docker container
 * The docker container will not start with IMAP idle to your INBOX folder and check for new mails. If a SPAM mail is detected, Antispambox will move the SPAM to your JUNK folder.
-* If a SPAM mail is not detect by Antispambox move the SPAM to your SPAM_train folder. If a HAM mail is detected as SPAM, move the mail to HAM_train. The backend services spamassassin and rspamd will learn improve their detection rate.
+* Mails you move manually to SPAM_train will be learned as SPAM. Mails you move manually to HAM_train will learned as HAM.  The backend services spamassassin and rspamd will learn improve their detection rate with each learned mail.
+
+### Hints
+
+* To see how many mails rspamd has already learned or detected as SPAM or HAM, just run: `spamc stat`
+
+* To see how many mails spamassassin has already learned run: `sa-learn --dump magic`
 
 ## TODOs
 
@@ -85,3 +93,17 @@ rspamd scans the mails on my machine very fast and efficient but the detection r
 MIT
 
 see license text
+
+
+
+
+
+
+
+
+
+
+
+
+
+
