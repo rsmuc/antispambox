@@ -7,7 +7,6 @@ import json
 import sys
 import logging
 from logging.handlers import TimedRotatingFileHandler
-import datetime
 
 # configure logging
 logger = logging.getLogger("Antispambox")
