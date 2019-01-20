@@ -10,7 +10,7 @@ from logging.handlers import TimedRotatingFileHandler
 import datetime
 
 # configure logging
-logger = logging.getLogger("Pushtest")
+logger = logging.getLogger("Antispambox")
 logger.setLevel(logging.INFO)
 
 # rotate the logfile every 24 hours
