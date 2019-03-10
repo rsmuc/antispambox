@@ -56,7 +56,7 @@ def scan_spam():
                           ' --spaminbox ' + JUNK + ' --imapinbox ' + INPUT +
                           ' --learnhambox ' + HAMTRAIN + ' --learnspambox ' + SPAMTRAIN2 +
                           ' --cachepath ' + CACHEPATH +
-                          ' --delete --expunge'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+                          ' --delete --expunge --partialrun 500'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     # '--mailreport', '/var/www/html/mailreport.txt',
     logger.info(p.communicate())
 
@@ -65,7 +65,7 @@ def scan_spam():
                           HOST + ' --imapuser ' + USERNAME + ' --imappasswd ' + PASSWORD +
                           ' --spaminbox ' + JUNK + ' --imapinbox ' + INPUT +
                           ' --learnhambox ' + HAMTRAIN + ' --learnspambox ' + SPAMTRAIN +
-                          ' --delete --expunge'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+                          ' --delete --expunge --partialrun 500'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     logger.info(p.communicate())
 
 
