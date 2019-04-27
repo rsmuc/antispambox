@@ -59,7 +59,7 @@ rspamd scans the mails on my machine very fast and efficient but the detection r
 * ```sudo docker volume create accounts```
 
   ```
-* ```sudo docker run -d --name antispambox -v bayesdb:/var/spamassassin/bayesdb -v accounts:/root/accounts antispambox```
+* ```sudo docker run -d --name antispambox --restart always -v bayesdb:/var/spamassassin/bayesdb -v accounts:/root/accounts antispambox```
 
 ### workflow and configuration
 
