@@ -21,28 +21,19 @@ Antispambox does have two anti-spam-engines integrated. Spamassassin and RSpamd.
 * I integrated push support
 * ...
 
-### Why not ISBG only?
+### Why not ISBG?
 
 ISBG is only supporting spamassassin as backend. Spamassassin is a very effective, but not very efficient SPAM filter. At home I'm running the docker container on a very small embedded PC with an Atom CPU. On my smartphone I'm using K9Mail with push support. So it is very important that the scanning for SPAM is very fast. With spamassassin it takes too long to filter the mails, so SPAM mails are shown on my smartphone before they are filterd out. The solution: rspamd. 
 
-But rspamd is not supported by ISBG and will not be supported to keep ISBG maintainable. So I forked ISBG and created IRSD. 
-
-Antispambox integrated both.
-
-### Why not IRSD only?
-
-rspamd scans the mails on my machine very fast and efficient but the detection rate is not as good for me as spamassassin. 
+But rspamd is not supported by ISBG and will not be supported to keep ISBG maintainable. So I forked ISBG and created IRSD.
 
 ### Features
 
-* Integration of ISBG (spamassassin)
 * Integration of IRSD (rspamd)
 * Integrated PUSH / IMAP IDLE support
 * integrated geo database and filters for it
 * focused on encrypted emails (header analysis only)
-* **custom spamassassin rules for Germany and header analysis (my mails are prefiltered by mailbox.org - this container is only focused to the SPAM the MBO filter does not catch) - so the rules may not match your requirements**
-* In future: Webinterface to configure everything
-* In future: Configure the rspamd webinterface
+* **custom rspamd rules for Germany and header analysis (my mails are prefiltered by mailbox.org - this container is only focused to the SPAM the MBO filter does not catch) - so the rules may not match your requirements**
 * In future: Support multiple IMAP accounts within one container
 
 ## Using the container
@@ -59,7 +50,7 @@ rspamd scans the mails on my machine very fast and efficient but the detection r
 * ```sudo docker volume create accounts```
 
   ```
-* ```sudo docker run -d --name antispambox --restart always -v bayesdb:/var/spamassassin/bayesdb -v accounts:/root/accounts antispambox```
+* ```sudo docker run -d --name antispambox -p 11334:11334 --restart always -v bayesdb:/var/spamassassin/bayesdb -v accounts:/root/accounts antispambox ```
 
 ### workflow and configuration
 
@@ -76,14 +67,15 @@ rspamd scans the mails on my machine very fast and efficient but the detection r
 * Restart the docker container
 * The docker container will not start with IMAP idle to your INBOX folder and check for new mails. If a SPAM mail is detected, Antispambox will move the SPAM to your JUNK folder.
 * Mails you move manually to SPAM_train will be learned as SPAM. Mails you move manually to HAM_train will learned as HAM.  The backend services spamassassin and rspamd will learn improve their detection rate with each learned mail.
+* In my configuration, I use the Archive-Folder of Thunderbird, as HAM train folder.
 
 ### Hints
 
 * To see how many mails rspamd has already learned or detected as SPAM or HAM, just run: `spamc stat`
 
-* To see how many mails spamassassin has already learned run: `sa-learn --dump magic`
-
 * There is a logfile to see the IMAP idle and scanning process: /var/log/antispambox.log
+
+* To connect to the webinterface use http://IP:11334. The password is "password123"
 
 ## TODOs
 

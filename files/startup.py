@@ -55,13 +55,19 @@ def check_imap_configuration():
 
 def fix_permissions():
     """ fix the permissions of the bayes folders"""
-    p = subprocess.Popen(['chown', '-R', 'debian-spamd:mail', '/var/spamassassin'], stdout=subprocess.PIPE)
-    (output, err) = p.communicate()
-    if p.returncode != 0:
-        print("chown failed")
-        print(err)
-        print(output)
-    p = subprocess.Popen(['chmod', 'a+wr', '/var/spamassassin', '-R'], stdout=subprocess.PIPE)
+    # p = subprocess.Popen(['chown', '-R', 'debian-spamd:mail', '/var/spamassassin'], stdout=subprocess.PIPE)
+    # (output, err) = p.communicate()
+    # if p.returncode != 0:
+    #     print("chown failed")
+    #     print(err)
+    #     print(output)
+    # p = subprocess.Popen(['chmod', 'a+wr', '/var/spamassassin', '-R'], stdout=subprocess.PIPE)
+    # (output, err) = p.communicate()
+    # if p.returncode != 0:
+    #     print("chmod failed")
+    #     print(err)
+    #     print(output)
+    p = subprocess.Popen(['chmod', 'a+wr', '/etc/rspamd/local.d', '-R'], stdout=subprocess.PIPE)
     (output, err) = p.communicate()
     if p.returncode != 0:
         print("chmod failed")
@@ -100,8 +106,8 @@ def start_imap_idle():
 print("\n\n\n ******* STARTUP ANTISPAMBOX ******* \n\n\n")
 
 print("\n\n *** delete lock files if still existing")
-cleanup_file("/var/spamassassin/scan_lock")
-cleanup_file("/root/.cache/isbg/lock")
+#cleanup_file("/var/spamassassin/scan_lock")
+#cleanup_file("/root/.cache/isbg/lock")
 cleanup_file("/root/.cache/irsd/lock")
 
 print("\n\n *** copy imap_accounts.json file")
@@ -111,13 +117,13 @@ print("\n\n *** fixing permissions")
 fix_permissions()
 
 print("\n\n *** updating spamassassin rules")
-download_spamassassin_rules()
+#download_spamassassin_rules()
 
 print("\n\n *** start the services")
 start_service("rsyslog")
 start_service("redis-server")
 start_service("rspamd")
-start_service("spamassassin")
+#start_service("spamassassin")
 start_service("lighttpd")
 start_service("cron")
 

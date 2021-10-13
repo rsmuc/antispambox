@@ -1,2 +1,2 @@
-5 0 * * * /usr/bin/sa-update -v --refreshmirrors | /usr/bin/logger -e -t sa-update
-5 10 * * * /usr/bin/sa-update --no-gpg -v --channelfile /root/sa-channels
+#5 0 * * * /usr/bin/sa-update -v --refreshmirrors | /usr/bin/logger -e -t sa-update
+#5 10 * * * /usr/bin/sa-update --no-gpg -v --channelfile /root/sa-channels

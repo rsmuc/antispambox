@@ -18,20 +18,17 @@ RUN apt-get update && \
       python3-pip \
       python3-setuptools \
       rsyslog \
-      spamassassin \
-      spamc \
       unzip \
       wget \
       python3-sphinx \
       lighttpd \
       logrotate \
+      gnupg \
       unattended-upgrades && \
 
 
 # install dependencies for pushtest
     pip3 install imapclient && \
-    pip3 install isbg && \
-
 
 # download and install irsd (as long as it is not pushed to pypi)
 	cd /root && \
@@ -43,6 +40,14 @@ RUN apt-get update && \
     rm -Rf /root/irsd ; \
     rm /root/master.zip ; \
 
+# install IP2Location
+    pip3 install IP2Location && \
+    wget https://download.ip2location.com/lite/IP2LOCATION-LITE-DB1.BIN.ZIP &&\
+    wget https://download.ip2location.com/lite/IP2LOCATION-LITE-DB1.IPV6.BIN.ZIP &&\
+    unzip -o IP2LOCATION-LITE-DB1.BIN.ZIP &&\
+    unzip -o IP2LOCATION-LITE-DB1.IPV6.BIN.ZIP &&\
+    rm *.ZIP &&\
+
 
 ############################
 # configure software
@@ -51,23 +56,14 @@ RUN apt-get update && \
 # create folders
     mkdir /root/accounts ; \
     cd /root && \
-#
-# fix permissions
-    chown -R debian-spamd:mail /var/spamassassin ; \
+
 #
 # configure cron configuration
     crontab /root/cron_configuration && rm /root/cron_configuration ; \
 #
 # copy logrotate configuration
     mv mailreport_logrotate /etc/logrotate.d/mailreport_logrotate ; \
-#
-# configure spamassassin
-    sed -i 's/ENABLED=0/ENABLED=1/' /etc/default/spamassassin ; \
-    sed -i 's/CRON=0/CRON=1/' /etc/default/spamassassin ; \
-    sed -i 's/^OPTIONS=".*"/OPTIONS="--allow-tell --max-children 5 --helper-home-dir -u debian-spamd -x --virtual-config-dir=\/var\/spamassassin -s mail"/' /etc/default/spamassassin ; \
-    echo "bayes_path /var/spamassassin/bayesdb/bayes" >> /etc/spamassassin/local.cf ; \
-    cp /root/spamassassin_user_prefs /etc/spamassassin/user_prefs.cf ;\
-#
+
 # configure OS base
     echo "alias logger='/usr/bin/logger -e'" >> /etc/bash.bashrc ; \
     echo "LANG=en_US.UTF-8" > /etc/default/locale ; \
@@ -76,21 +72,10 @@ RUN apt-get update && \
     unlink /etc/timezone ; \
     ln -s /usr/share/zoneinfo/Europe/Berlin /etc/timezone ; \
 #
-# integrate geo database
-    apt-get install -y --no-install-recommends cpanminus make wget&&\
-	cpanm  YAML &&\
-	cpanm Geography::Countries &&\
-	cpanm Geo::IP IP::Country::Fast &&\
-	cd /tmp && \
-	wget -N http://geolite.maxmind.com/download/geoip/database/GeoLiteCountry/GeoIP.dat.gz &&\
-	gunzip GeoIP.dat.gz &&\
-	mkdir /usr/local/share/GeoIP/ &&\
-	mv GeoIP.dat /usr/local/share/GeoIP/ &&\
-	echo "loadplugin Mail::SpamAssassin::Plugin::RelayCountry" >> /etc/spamassassin/init.pre ; \
-#
 # install rspamd
     CODENAME=`lsb_release -c -s` ;\
     echo "deb [arch=amd64] http://rspamd.com/apt-stable/ $CODENAME main" > /etc/apt/sources.list.d/rspamd.list ;\
+    wget -O- https://rspamd.com/apt-stable/gpg.key | apt-key add ;\
     echo "deb-src [arch=amd64] http://rspamd.com/apt-stable/ $CODENAME main" >> /etc/apt/sources.list.d/rspamd.list ;\
     apt-get update ;\
     apt-get --no-install-recommends install -y --allow-unauthenticated rspamd redis-server ;\
@@ -110,12 +95,10 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-
 # volumes
 VOLUME /var/spamassassin/bayesdb
 VOLUME /root/accounts
 
-# EXPOSE 80/tcp
-# EXPOSE 11334/tcp
+EXPOSE 11334/tcp
 
 CMD python3 /root/startup.py && tail -n 0 -F /var/log/*.log

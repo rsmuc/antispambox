@@ -42,7 +42,6 @@ try:
     INPUT = datastore["antispambox"]["account"]["inbox_folder"]
     HAMTRAIN = datastore["antispambox"]["account"]["ham_train_folder"]
     SPAMTRAIN = datastore["antispambox"]["account"]["spam_train_folder"]
-    SPAMTRAIN2 = datastore["antispambox"]["account"]["spam_train_folder2"]
     CACHEPATH = "rspamd"
 except IndexError:
     print("ERROR: was not able to read imap_accounts.json.")
@@ -54,18 +53,10 @@ def scan_spam():
     p = subprocess.Popen(['/usr/local/bin/irsd --imaphost ' +
                           HOST + ' --imapuser ' + USERNAME + ' --imappasswd ' + PASSWORD +
                           ' --spaminbox ' + JUNK + ' --imapinbox ' + INPUT +
-                          ' --learnhambox ' + HAMTRAIN + ' --learnspambox ' + SPAMTRAIN2 +
+                          ' --learnhambox ' + HAMTRAIN + ' --learnspambox ' + SPAMTRAIN +
                           ' --cachepath ' + CACHEPATH +
                           ' --delete --expunge --partialrun 500'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     # '--mailreport', '/var/www/html/mailreport.txt',
-    logger.info(p.communicate())
-
-    logger.info("Scanning for SPAM with spamassassin")
-    p = subprocess.Popen(['/usr/local/bin/isbg --spamc --imaphost ' +
-                          HOST + ' --imapuser ' + USERNAME + ' --imappasswd ' + PASSWORD +
-                          ' --spaminbox ' + JUNK + ' --imapinbox ' + INPUT +
-                          ' --learnhambox ' + HAMTRAIN + ' --learnspambox ' + SPAMTRAIN +
-                          ' --delete --expunge --partialrun 500'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     logger.info(p.communicate())
 
 
@@ -107,7 +98,7 @@ def pushing(server):
                 logger.info("Response: nothing")
                 count = count + 1
              
-            if count > 5:
+            if count > 25:
                 logger.info("No responses from Server - Scan for Spam, then Restart")
                 scan_spam()
                 count = 0
