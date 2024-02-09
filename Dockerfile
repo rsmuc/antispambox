@@ -1,4 +1,4 @@
-FROM debian:stable-slim
+FROM python:3.10-slim
 
 # shell to start from Kitematic
 ENV DEBIAN_FRONTEND=noninteractive
@@ -14,7 +14,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
       cron \
       nano \
-      python3 \
+      # python3 \
       python3-pip \
       python3-setuptools \
       rsyslog \
